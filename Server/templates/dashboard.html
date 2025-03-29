@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}∀Space - Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Welcome Section -->
+        <div class="col-12 mb-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h1 class="card-title">Welcome back, {{ user.username }}!</h1>
+                    <p class="card-text">Here's what's happening in your workspace today.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="col-md-6 mb-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Your Tokens</h5>
+                    <h2 class="display-4">3</h2>
+                    <p class="card-text">Active tokens in your workspace</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Used computing power</h5>
+                    <h2 class="display-4">12</h2>
+                    <p class="card-text">Tasks assigned to you</p>
+                    <a href="#" class="btn btn-primary">View Tasks</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="col-md-8 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Recently participated projects</h5>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Project "Captures Neptune's Auroras For The First Time" updated</h6>
+                                <small>3 hours ago</small>
+                            </div>
+                            <p class="mb-1">New design mockups have been uploaded</p>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Task "Calculating Rocket Trust Equation" completed</h6>
+                                <small>5 hours ago</small>
+                            </div>
+                            <p class="mb-1">Documentation has been updated with new features</p>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Task "Visualizing the Sun's Plasma Flows" completed</h6>
+                                <small>1 day ago</small>
+                            </div>
+                            <p class="mb-1">John Doe has joined the development team</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Actions</h5>
+                    <div class="d-grid gap-2">
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="bi bi-plus-circle me-2"></i>New Project
+                        </a>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="bi bi-person-plus me-2"></i>Invite Team Member
+                        </a>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="bi bi-calendar-plus me-2"></i>Schedule Meeting
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

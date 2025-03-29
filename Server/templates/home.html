@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}∀Space - Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="container mt-5">
+        <div class="text-center">
+            <h1 class="display-4">Welcome back, {{ user.username }}!</h1>
+            <p class="lead">You are logged in and ready to explore.</p>
+            <a href="#" class="btn btn-primary btn-lg">Go to Dashboard</a>
+        </div>
+    </div>
+{% else %}
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">Welcome to ∀Space</h1>
+                    <p class="lead mb-4">Your virtual space for collaboration and innovation. Join us in creating the future of virtual interaction.</p>
+                    <div class="d-flex gap-3">
+                        <a href="{% url 'register' %}" class="btn btn-light btn-lg">Get Started</a>
+                        <a href="#features" class="btn btn-outline-light btn-lg">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="{% static "images/index.png" %}" alt="∀Space Platform" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Why Choose ∀Space?</h2>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <i class="bi bi-people feature-icon"></i>
+                            <h3 class="card-title">Team Collaboration</h3>
+                            <p class="card-text">Work together seamlessly with real-time collaboration tools and instant messaging.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <i class="bi bi-lightning-charge feature-icon"></i>
+                            <h3 class="card-title">Fast & Reliable</h3>
+                            <p class="card-text">Lightning-fast performance with 99.9% uptime guarantee.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Simple, Transparent Pricing</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card pricing-card h-100">
+                        <div class="card-header">
+                            <h3 class="mb-0">Starter</h3>
+                            <div class="display-4 my-3">$9</div>
+                            <p class="mb-0">per month</p>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>Up to 5 team members</li>
+                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>5GB storage</li>
+                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>Basic support</li>
+                            </ul>
+                            <a href="{% url 'register' %}" class="btn btn-outline-primary w-100">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card pricing-card h-100 border-primary">
+                        <div class="card-header bg-primary">
+                            <h3 class="mb-0">Professional</h3>
+                            <div class="display-4 my-3">$29</div>
+                            <p class="mb-0">per month</p>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>Up to 20 team members</li>
+                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>50GB storage</li>
+                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>Priority support</li>
+                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>Advanced features</li>
+                            </ul>
+                            <a href="{% url 'register' %}" class="btn btn-primary w-100">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card pricing-card h-100">
+                        <div class="card-header">
+                            <h3 class="mb-0">Enterprise</h3>
+                            <div class="display-4 my-3">$99</div>
+                            <p class="mb-0">per month</p>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>Unlimited team members</li>
+                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>500GB storage</li>
+                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>24/7 support</li>
+                                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i>Custom features</li>
+                            </ul>
+                            <a href="{% url 'register' %}" class="btn btn-outline-primary w-100">Contact Sales</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <img src="https://placehold.co/600x400" alt="About ∀Space" class="img-fluid rounded shadow">
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="mb-4">About ∀Space</h2>
+                    <p class="lead mb-4">∀Space is revolutionizing the way teams collaborate in the virtual world. Our platform combines cutting-edge technology with intuitive design to create a seamless workspace experience.</p>
+                    <p class="mb-4">Founded in 2024, we've been committed to providing the best virtual collaboration tools for teams worldwide. Our mission is to make remote work as effective and engaging as working in person.</p>
+                    <div class="d-flex gap-3">
+                        <a href="{% url 'register' %}" class="btn btn-primary">Join Us Today</a>
+                        <a href="#" class="btn btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-5 bg-light">
+        <div class="container text-center">
+            <h2 class="mb-4">Ready to Transform Your Virtual Workspace?</h2>
+            <p class="lead mb-4">Join thousands of teams already using ∀Space to enhance their productivity.</p>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Get Started Now</a>
+        </div>
+    </section>
+{% endif %}
+{% endblock %} 

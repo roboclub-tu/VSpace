@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VSpace.Others
+namespace VSpace.ViewModels
 {
-    public class AppsettingsService
+    internal class LoginViewModel
     {
-
     }
 }
