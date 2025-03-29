@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}∀Space - Upload Media{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Left Sidebar -->
+        <div class="col-md-3">
+            <div class="card shadow-sm mb-4 space-element">
+                <div class="card-header bg-transparent">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person-circle me-2"></i>Profile Menu
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a href="{% url 'dashboard' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                            <i class="bi bi-arrow-left me-2"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="card shadow-sm space-element mb-5">
+                <div class="card-header bg-transparent">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-upload me-2"></i>Upload Media
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Token Costs:</strong><br>
+                        Images: 1 token<br>
+                        Videos: 2 tokens
+                    </div>
+                    <div class="alert alert-warning" id="token-warning" style="display: none;">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> You don't have enough tokens to upload this media type.
+                    </div>
+                    <div class="alert alert-success">
+                        <i class="bi bi-coin me-2"></i>
+                        <strong>Your Balance:</strong> {{ user.tokens_amount }} tokens
+                    </div>
+                    <div class="alert alert-primary">
+                        <i class="bi bi-key me-2"></i>
+                        <strong>Your String Token:</strong> {{ user.token }}
+                    </div>
+                    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="media_type" class="form-label">Media Type</label>
+                            <select class="form-select" id="media_type" name="media_type" required onchange="checkTokenBalance()">
+                                <option value="">Select type...</option>
+                                <option value="image">Image (1 token)</option>
+                                <option value="video">Video (2 tokens)</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="file" class="form-label">File</label>
+                            <input type="file" class="form-control" id="file" name="file" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="upload-btn">
+                            <i class="bi bi-upload me-2"></i>Upload
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.list-group-item {
+    border: none;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.list-group-item:hover {
+    background: rgba(108, 99, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.list-group-item i {
+    font-size: 1.1rem;
+}
+
+.card-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.space-element {
+    position: relative;
+    overflow: hidden;
+}
+
+.space-element::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(108, 99, 255, 0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.bi {
+    transition: transform 0.3s ease;
+}
+
+.bi:hover {
+    transform: scale(1.2);
+}
+</style>
+
+<script>
+// Form validation
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+
+// Token balance check
+function checkTokenBalance() {
+    const mediaType = document.getElementById('media_type').value;
+    const userBalance = {{ user.tokens_amount }};
+    const warningDiv = document.getElementById('token-warning');
+    const uploadBtn = document.getElementById('upload-btn');
+    
+    if (mediaType === '') {
+        warningDiv.style.display = 'none';
+        uploadBtn.disabled = false;
+        return;
+    }
+    
+    const requiredTokens = mediaType === 'image' ? 1 : 2;
+    
+    if (userBalance < requiredTokens) {
+        warningDiv.style.display = 'block';
+        uploadBtn.disabled = true;
+    } else {
+        warningDiv.style.display = 'none';
+        uploadBtn.disabled = false;
+    }
+}
+</script>
+{% endblock %} 

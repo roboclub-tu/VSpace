@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}∀Space - Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Welcome Message -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm space-element">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-circle bg-gradient-primary text-white me-3">
+                            <i class="bi bi-astronaut"></i>
+                        </div>
+                        <div>
+                            <h2 class="mb-1">Welcome back, {{ user.username }}!</h2>
+                            <p class="text-muted mb-0">
+                                <i class="bi bi-stars me-2"></i>Role: {{ user.role|title }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row">
+        <!-- Left Sidebar -->
+        <div class="col-md-3">
+            <div class="card shadow-sm mb-4 space-element">
+                <div class="card-header bg-transparent">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-compass me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a href="{% url 'gallery' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                            <i class="bi bi-grid me-2"></i> Overview Gallery
+                        </a>
+                        <a href="{% url 'profile' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                            <i class="bi bi-person me-2"></i> Profile
+                        </a>
+                        <a href="{% url 'logout' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                            <i class="bi bi-box-arrow-right me-2"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-md-9">
+            <!-- Welcome Message -->
+            <div class="card shadow-sm mb-4 space-element">
+                <div class="card-body text-center py-5">
+                    <i class="bi bi-emoji-smile text-primary" style="font-size: 3rem;"></i>
+                    <h3 class="mt-3">Welcome to ∀Space!</h3>
+                    <p class="text-muted">We connect the space between you and the stars.</p>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="row justify-content-center">
+                <!-- Tokens Balance Card -->
+                <div class="col-md-5">
+                    <div class="card shadow-sm space-element tokens-card mb-5">
+                        <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                            <h2 class="display-4 mb-0">{{ user.tokens_amount }}</h2>
+                            <p class="text-muted mb-0">Tokens</p>
+                        </div>
+                    </div>
+                </div>
+                {% if not user.is_admin and user.role.lower != 'researcher' %}
+                <div class="col-md-5">
+                    <div class="card shadow-sm space-element mb-5">
+                        <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
+                            <h2 class="display-4 mb-0">
+                                <i class="bi bi-upload"></i>
+                            </h2>
+                            <p class="text-muted mb-3">Upload Media</p>
+                            <a href="{% url 'upload_media' %}" class="btn btn-primary">
+                                <i class="bi bi-upload me-2"></i>Upload
+                            </a>
+                            <small class="text-muted mt-2">
+                                Images: 1 token | Videos: 2 tokens
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    background: var(--gradient-primary);
+    box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
+}
+
+.bg-gradient-primary {
+    background: var(--gradient-primary);
+}
+
+.list-group-item {
+    border: none;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.list-group-item:hover {
+    background: rgba(108, 99, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.list-group-item i {
+    font-size: 1.1rem;
+}
+
+.card-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.space-element {
+    position: relative;
+    overflow: hidden;
+}
+
+.space-element::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(108, 99, 255, 0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.bi {
+    transition: transform 0.3s ease;
+}
+
+.bi:hover {
+    transform: scale(1.2);
+}
+
+.tokens-card {
+    aspect-ratio: 1;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.tokens-card .card-body {
+    height: 100%;
+}
+</style>
+{% endblock %} 
