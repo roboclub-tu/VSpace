@@ -1,0 +1,54 @@
+<Window x:Class="VSpace.Views.DashboardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VSpace.Views"
+        mc:Ignorable="d"
+        Title="VSpace Dashboard" Height="600" Width="1000"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Background="#FF007ACC">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Text="VSpace Dashboard" 
+                       Foreground="White" 
+                       FontSize="24" 
+                       Margin="20,15"/>
+            
+            <Button Grid.Column="1" 
+                    Content="Logout" 
+                    Width="100" 
+                    Height="35" 
+                    Margin="0,15,20,15"
+                    Background="Transparent"
+                    Foreground="White"
+                    BorderThickness="1"
+                    BorderBrush="White"
+                    Click="LogoutButton_Click">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="20">
+            <TextBlock Text="Welcome to VSpace Dashboard!" 
+                       FontSize="20" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Window> 

@@ -5,8 +5,78 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VSpace"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="VSpace" Height="500" Width="800"
+        WindowStartupLocation="CenterScreen"
+        Background="#FFF5F5F5">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <!-- Header -->
+        <Grid Grid.Row="0" Background="#FF007ACC">
+            <TextBlock Text="VSpace Login" 
+                       Foreground="White" 
+                       FontSize="28" 
+                       FontWeight="Light"
+                       Margin="40,30"/>
+        </Grid>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="40">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Welcome Text -->
+            <TextBlock Text="Welcome to VSpace" 
+                       FontSize="24" 
+                       FontWeight="Light"
+                       Margin="0,0,0,20"/>
+
+            <!-- GUID Input Section -->
+            <StackPanel Grid.Row="1" Margin="0,0,0,30">
+                <TextBlock Text="Enter your 20-character GUID:" 
+                           FontSize="16" 
+                           Margin="0,0,0,10"/>
+                
+                <TextBox x:Name="GuidTextBox" 
+                         Height="45"
+                         FontSize="16"
+                         MaxLength="20"
+                         Padding="15,0"
+                         TextChanged="GuidTextBox_TextChanged"
+                         BorderThickness="1"
+                         BorderBrush="#FFCCCCCC"
+                         Background="White">
+                    <TextBox.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+            </StackPanel>
+
+            <!-- Submit Button -->
+            <Button x:Name="SubmitButton"
+                    Grid.Row="2"
+                    Content="Submit"
+                    Height="45"
+                    Width="150"
+                    FontSize="16"
+                    Background="#FF007ACC"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Click="SubmitButton_Click">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
     </Grid>
 </Window>
