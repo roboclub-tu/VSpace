@@ -107,6 +107,7 @@
             <Grid Grid.Row="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -115,16 +116,37 @@
                            FontWeight="Bold"
                            Margin="0,0,0,10"/>
 
+                <StackPanel Grid.Row="1" 
+                          Orientation="Horizontal" 
+                          Margin="0,0,0,10">
+                    <Button x:Name="StartProjectButton"
+                            Content="Start Project"
+                            Width="120"
+                            Height="30"
+                            Margin="0,0,10,0"
+                            Click="StartProjectButton_Click"
+                            IsEnabled="False"/>
+                    
+                    <Button x:Name="StopProjectButton"
+                            Content="Stop Project"
+                            Width="120"
+                            Height="30"
+                            Click="StopProjectButton_Click"
+                            IsEnabled="False"/>
+                </StackPanel>
+
                 <ListView x:Name="ProjectsListView"
-                          Grid.Row="1"
+                          Grid.Row="2"
                           BorderThickness="1"
-                          BorderBrush="#FFCCCCCC">
+                          BorderBrush="#FFCCCCCC"
+                          SelectionChanged="ProjectsListView_SelectionChanged">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Project Name" Width="200" DisplayMemberBinding="{Binding Name}"/>
+                            <GridViewColumn Header="Project Name" Width="150" DisplayMemberBinding="{Binding Name}"/>
+                            <GridViewColumn Header="URL" Width="250" DisplayMemberBinding="{Binding ProjectUrl}"/>
                             <GridViewColumn Header="Status" Width="100" DisplayMemberBinding="{Binding Status}"/>
                             <GridViewColumn Header="Tasks" Width="100" DisplayMemberBinding="{Binding Tasks}"/>
-                            <GridViewColumn Header="Progress" Width="200" DisplayMemberBinding="{Binding Progress}"/>
+                            <GridViewColumn Header="Progress" Width="100" DisplayMemberBinding="{Binding Progress}"/>
                         </GridView>
                     </ListView.View>
                 </ListView>

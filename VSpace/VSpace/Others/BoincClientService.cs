@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace VSpace.Others
 {
@@ -128,7 +129,7 @@ namespace VSpace.Others
             var projects = new List<BoincProject>();
             var lines = output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             bool isUserSection = false;
-            bool isProjectEntry = false;
+            BoincProject currentProject = null;
 
             foreach (var line in lines)
             {
@@ -145,24 +146,97 @@ namespace VSpace.Others
                 {
                     if (line.Contains(") -----------"))
                     {
-                        isProjectEntry = true;
-                    }
-                    else if (isProjectEntry && line.Contains("name:"))
-                    {
-                        var project = new BoincProject
+                        if (currentProject != null)
                         {
-                            Name = line.Replace("name:", "").Trim(),
+                            projects.Add(currentProject);
+                        }
+                        currentProject = new BoincProject
+                        {
                             Status = "Active",
                             Tasks = "0",
                             Progress = "0%"
                         };
-                        projects.Add(project);
-                        isProjectEntry = false;
+                    }
+                    else if (currentProject != null)
+                    {
+                        if (line.Contains("name:"))
+                        {
+                            currentProject.Name = line.Replace("name:", "").Trim();
+                        }
+                        else if (line.Contains("master URL:"))
+                        {
+                            currentProject.ProjectUrl = line.Replace("master URL:", "").Trim();
+                        }
                     }
                 }
             }
 
+            if (currentProject != null)
+            {
+                projects.Add(currentProject);
+            }
+
             return projects;
+        }
+
+        public async Task<bool> StartProjectAsync(string projectUrl)
+        {
+            if (!_isConnected)
+                return false;
+
+            try
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = BOINC_CLIENT_PATH,
+                        Arguments = $"--project {projectUrl} resume",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true
+                    }
+                };
+
+                process.Start();
+                string output = await process.StandardOutput.ReadToEndAsync();
+                await process.WaitForExitAsync();
+                return process.ExitCode == 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> StopProjectAsync(string projectUrl)
+        {
+            if (!_isConnected)
+                return false;
+
+            try
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = BOINC_CLIENT_PATH,
+                        Arguments = $"--project {projectUrl} suspend",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true
+                    }
+                };
+
+                process.Start();
+                string output = await process.StandardOutput.ReadToEndAsync();
+                await process.WaitForExitAsync();
+                return process.ExitCode == 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 
@@ -172,5 +246,6 @@ namespace VSpace.Others
         public string Status { get; set; }
         public string Tasks { get; set; }
         public string Progress { get; set; }
+        public string ProjectUrl { get; set; }
     }
 } 

@@ -7,6 +7,7 @@ namespace VSpace.Views
     public partial class DashboardWindow : Window
     {
         private readonly BoincClientService _boincService;
+        private BoincProject _selectedProject;
 
         public DashboardWindow()
         {
@@ -97,6 +98,79 @@ namespace VSpace.Views
         {
             var projects = await _boincService.GetProjectsAsync();
             ProjectsListView.ItemsSource = projects;
+        }
+
+        private void ProjectsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _selectedProject = ProjectsListView.SelectedItem as BoincProject;
+            StartProjectButton.IsEnabled = _selectedProject != null;
+            StopProjectButton.IsEnabled = _selectedProject != null;
+        }
+
+        private async void StartProjectButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedProject == null)
+                return;
+
+            try
+            {
+                bool success = await _boincService.StartProjectAsync(_selectedProject.ProjectUrl);
+                if (success)
+                {
+                    MessageBox.Show("Project started successfully.", 
+                                  "Success", 
+                                  MessageBoxButton.OK, 
+                                  MessageBoxImage.Information);
+                    await RefreshProjectsAsync();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to start project.", 
+                                  "Error", 
+                                  MessageBoxButton.OK, 
+                                  MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error starting project: {ex.Message}", 
+                              "Error", 
+                              MessageBoxButton.OK, 
+                              MessageBoxImage.Error);
+            }
+        }
+
+        private async void StopProjectButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedProject == null)
+                return;
+
+            try
+            {
+                bool success = await _boincService.StopProjectAsync(_selectedProject.ProjectUrl);
+                if (success)
+                {
+                    MessageBox.Show("Project stopped successfully.", 
+                                  "Success", 
+                                  MessageBoxButton.OK, 
+                                  MessageBoxImage.Information);
+                    await RefreshProjectsAsync();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to stop project.", 
+                                  "Error", 
+                                  MessageBoxButton.OK, 
+                                  MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error stopping project: {ex.Message}", 
+                              "Error", 
+                              MessageBoxButton.OK, 
+                              MessageBoxImage.Error);
+            }
         }
     }
 } 
