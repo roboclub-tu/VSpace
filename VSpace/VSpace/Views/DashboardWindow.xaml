@@ -167,31 +167,61 @@
                 </ListView>
             </Grid>
 
-            <!-- Token Balance Box -->
-            <Border Grid.Column="1" 
-                    Grid.Row="0" 
-                    Grid.RowSpan="3"
-                    Background="#FFF5F5F5"
-                    BorderBrush="#FFCCCCCC"
-                    BorderThickness="1"
-                    CornerRadius="5"
-                    Padding="15"
-                    Margin="20,0,0,0"
-                    VerticalAlignment="Top">
-                <StackPanel Width="150">
-                    <TextBlock Text="Your Tokens Balance"
-                               FontSize="16"
-                               FontWeight="Bold"
-                               Margin="0,0,0,10"
-                               HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="TokenBalanceText"
-                               Text="0"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               Foreground="#FF007ACC"
-                               HorizontalAlignment="Center"/>
-                </StackPanel>
-            </Border>
+            <!-- Token Balance and File Upload Boxes -->
+            <StackPanel Grid.Column="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="3"
+                        Orientation="Horizontal"
+                        Margin="20,0,0,0"
+                        VerticalAlignment="Top">
+                <!-- Token Balance Box -->
+                <Border Background="#FFF5F5F5"
+                        BorderBrush="#FFCCCCCC"
+                        BorderThickness="1"
+                        CornerRadius="5"
+                        Padding="15"
+                        Margin="0,0,10,0">
+                    <StackPanel Width="150">
+                        <TextBlock Text="Your Tokens Balance"
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="TokenBalanceText"
+                                   Text="0"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="#FF007ACC"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- File Upload Box -->
+                <Border Background="#FFF5F5F5"
+                        BorderBrush="#FFCCCCCC"
+                        BorderThickness="1"
+                        CornerRadius="5"
+                        Padding="15">
+                    <StackPanel Width="150">
+                        <TextBlock Text="Upload your file"
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"
+                                   HorizontalAlignment="Center"/>
+                        <Button x:Name="BrowseButton"
+                                Content="Browse"
+                                Width="100"
+                                Height="30"
+                                Margin="0,0,0,10"
+                                Click="BrowseButton_Click"/>
+                        <TextBlock x:Name="SelectedFileText"
+                                   Text="No file selected"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window> 

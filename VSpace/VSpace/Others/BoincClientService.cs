@@ -186,6 +186,14 @@ namespace VSpace.Others
                                 currentProject.IsRunning = !line.Contains("yes");
                                 currentProject.Status = currentProject.IsRunning ? "Running" : "Stopped";
                             }
+                            else if (line.Contains("tasks:"))
+                            {
+                                currentProject.Tasks = line.Replace("tasks:", "").Trim();
+                            }
+                            else if (line.Contains("progress:"))
+                            {
+                                currentProject.Progress = line.Replace("progress:", "").Trim();
+                            }
                         }
                     }
                 }

@@ -14,6 +14,7 @@ namespace VSpace.Views
         private readonly BoincClientService _boincService;
         private readonly HttpClient _httpClient;
         private readonly string _apiUrl = "http://add.com/get-user_tokens";
+        private readonly string _apiFileUploadUrl = "http://add.com/get-user_tokens";
         private BoincProject _selectedProject;
 
         public DashboardWindow()
@@ -208,6 +209,73 @@ namespace VSpace.Views
                               MessageBoxButton.OK, 
                               MessageBoxImage.Error);
             }
+        }
+
+        private async void BrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.Filter = "All files (*.*)|*.*";
+            dialog.Title = "Select a file to upload";
+
+            if (dialog.ShowDialog() == true)
+            {
+                try
+                {
+                    SelectedFileText.Text = "Uploading...";
+                    BrowseButton.IsEnabled = false;
+
+                    using (var multipartContent = new MultipartFormDataContent())
+                    {
+                        // Add the file
+                        var fileStream = System.IO.File.OpenRead(dialog.FileName);
+                        var streamContent = new StreamContent(fileStream);
+                        multipartContent.Add(streamContent, "file", System.IO.Path.GetFileName(dialog.FileName));
+
+                        // Add the user GUID
+                        multipartContent.Add(new StringContent(AppSettingsManager.UserGuid), "guid");
+
+                        // Send the request
+                        var response = await _httpClient.PostAsync(_apiFileUploadUrl, multipartContent);
+                        var responseContent = await response.Content.ReadAsStringAsync();
+                        var result = JsonSerializer.Deserialize<UploadResponse>(responseContent);
+
+                        if (result.success)
+                        {
+                            SelectedFileText.Text = "Upload successful!";
+                            MessageBox.Show("File uploaded successfully!", 
+                                          "Success", 
+                                          MessageBoxButton.OK, 
+                                          MessageBoxImage.Information);
+                        }
+                        else
+                        {
+                            SelectedFileText.Text = "Upload failed";
+                            MessageBox.Show($"Upload failed: {result.message}", 
+                                          "Error", 
+                                          MessageBoxButton.OK, 
+                                          MessageBoxImage.Error);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    SelectedFileText.Text = "Upload failed";
+                    MessageBox.Show($"Error uploading file: {ex.Message}", 
+                                  "Error", 
+                                  MessageBoxButton.OK, 
+                                  MessageBoxImage.Error);
+                }
+                finally
+                {
+                    BrowseButton.IsEnabled = true;
+                }
+            }
+        }
+
+        private class UploadResponse
+        {
+            public bool success { get; set; }
+            public string message { get; set; }
         }
     }
 } 
