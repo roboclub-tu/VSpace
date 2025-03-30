@@ -167,6 +167,11 @@ namespace VSpace.Others
                         {
                             currentProject.ProjectUrl = line.Replace("master URL:", "").Trim();
                         }
+                        else if (line.Contains("suspended via GUI:"))
+                        {
+                            currentProject.IsRunning = !line.Contains("yes");
+                            currentProject.Status = currentProject.IsRunning ? "Running" : "Stopped";
+                        }
                     }
                 }
             }
@@ -247,5 +252,6 @@ namespace VSpace.Others
         public string Tasks { get; set; }
         public string Progress { get; set; }
         public string ProjectUrl { get; set; }
+        public bool IsRunning { get; set; }
     }
 } 

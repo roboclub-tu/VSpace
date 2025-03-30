@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="VSpace Dashboard" Height="600" Width="1000"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <local:BoolToColorConverter x:Key="BoolToColorConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -144,7 +148,14 @@
                         <GridView>
                             <GridViewColumn Header="Project Name" Width="150" DisplayMemberBinding="{Binding Name}"/>
                             <GridViewColumn Header="URL" Width="250" DisplayMemberBinding="{Binding ProjectUrl}"/>
-                            <GridViewColumn Header="Status" Width="100" DisplayMemberBinding="{Binding Status}"/>
+                            <GridViewColumn Header="Status" Width="100">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Status}" 
+                                                 Foreground="{Binding IsRunning, Converter={StaticResource BoolToColorConverter}}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn Header="Tasks" Width="100" DisplayMemberBinding="{Binding Tasks}"/>
                             <GridViewColumn Header="Progress" Width="100" DisplayMemberBinding="{Binding Progress}"/>
                         </GridView>
