@@ -1,3 +1,8 @@
+using System;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using VSpace.Others;
@@ -7,13 +12,45 @@ namespace VSpace.Views
     public partial class DashboardWindow : Window
     {
         private readonly BoincClientService _boincService;
+        private readonly HttpClient _httpClient;
+        private readonly string _apiUrl = "http://add.com/get-user_tokens";
         private BoincProject _selectedProject;
 
         public DashboardWindow()
         {
             InitializeComponent();
             _boincService = new BoincClientService();
+            _httpClient = new HttpClient();
             RefreshStatusAsync();
+            LoadTokenCountAsync();
+        }
+
+        private async Task LoadTokenCountAsync()
+        {
+            //try
+            //{
+            //    var requestData = new { guid = AppSettingsManager.UserGuid };
+            //    var jsonContent = JsonSerializer.Serialize(requestData);
+            //    var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            //    var response = await _httpClient.PostAsync(_apiUrl, content);
+            //    var responseContent = await response.Content.ReadAsStringAsync();
+            //    var responseData = JsonSerializer.Deserialize<TokenResponse>(responseContent);
+
+            //    TokenBalanceText.Text = responseData.tokens_count.ToString();
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Error loading token count: {ex.Message}", 
+            //                  "Error", 
+            //                  MessageBoxButton.OK, 
+            //                  MessageBoxImage.Error);
+            //}
+        }
+
+        private class TokenResponse
+        {
+            public int tokens_count { get; set; }
         }
 
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)
