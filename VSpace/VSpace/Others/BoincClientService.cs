@@ -51,7 +51,7 @@ namespace VSpace.Others
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = BOINC_CLIENT_PATH,
-                        Arguments = "--get_state",
+                        Arguments = "--get_project_status",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         CreateNoWindow = true
@@ -62,7 +62,29 @@ namespace VSpace.Others
                 string output = await process.StandardOutput.ReadToEndAsync();
                 await process.WaitForExitAsync();
 
-                return output;
+                // Parse the output to count projects
+                var lines = output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                int projectCount = 0;
+                bool isUserSection = false;
+
+                foreach (var line in lines)
+                {
+                    if (line.Contains("======== Projects ========"))
+                    {
+                        isUserSection = true;
+                        continue;
+                    }
+                    if (line.Contains("======== Applications ========"))
+                    {
+                        break;
+                    }
+                    if (isUserSection && line.Contains(") -----------"))
+                    {
+                        projectCount++;
+                    }
+                }
+
+                return $"Connected - {projectCount} project(s) found";
             }
             catch (Exception)
             {
@@ -105,20 +127,45 @@ namespace VSpace.Others
         {
             var projects = new List<BoincProject>();
             var lines = output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            bool isUserSection = false;
+            BoincProject currentProject = null;
 
             foreach (var line in lines)
             {
-                if (line.Contains("Project:"))
+                if (line.Contains("======== Projects ========"))
                 {
-                    var project = new BoincProject
-                    {
-                        Name = line.Replace("Project:", "").Trim(),
-                        Status = "Active", // You might want to parse actual status
-                        Tasks = "0", // You might want to parse actual tasks
-                        Progress = "0%" // You might want to parse actual progress
-                    };
-                    projects.Add(project);
+                    isUserSection = true;
+                    continue;
                 }
+                if (line.Contains("======== Applications ========"))
+                {
+                    break;
+                }
+                if (isUserSection)
+                {
+                    if (line.Contains(") -----------"))
+                    {
+                        if (currentProject != null)
+                        {
+                            projects.Add(currentProject);
+                        }
+                        currentProject = new BoincProject
+                        {
+                            Status = "Active",
+                            Tasks = "0",
+                            Progress = "0%"
+                        };
+                    }
+                    else if (currentProject != null && line.Contains("name:"))
+                    {
+                        currentProject.Name = line.Replace("name:", "").Trim();
+                    }
+                }
+            }
+
+            if (currentProject != null)
+            {
+                projects.Add(currentProject);
             }
 
             return projects;

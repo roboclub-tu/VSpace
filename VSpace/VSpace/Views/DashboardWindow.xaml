@@ -121,10 +121,10 @@
                           BorderBrush="#FFCCCCCC">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Project Name" Width="200"/>
-                            <GridViewColumn Header="Status" Width="100"/>
-                            <GridViewColumn Header="Tasks" Width="100"/>
-                            <GridViewColumn Header="Progress" Width="200"/>
+                            <GridViewColumn Header="Project Name" Width="200" DisplayMemberBinding="{Binding Name}"/>
+                            <GridViewColumn Header="Status" Width="100" DisplayMemberBinding="{Binding Status}"/>
+                            <GridViewColumn Header="Tasks" Width="100" DisplayMemberBinding="{Binding Tasks}"/>
+                            <GridViewColumn Header="Progress" Width="200" DisplayMemberBinding="{Binding Progress}"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
