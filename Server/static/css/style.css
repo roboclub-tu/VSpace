@@ -434,7 +434,7 @@ label {
 .input-group-text {
     background: rgba(26, 26, 58, 0.5);
     border: 1px solid var(--border-color);
-    color: var(--text-light);
+    color: var(--darker-bg);
 }
 
 /* Form Check Labels */
@@ -538,4 +538,3 @@ select.form-control option {
 .valid-feedback {
     color: #51cf66;
 } 
-

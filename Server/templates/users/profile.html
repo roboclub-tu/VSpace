@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}∀Space - Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Left Sidebar -->
+        <div class="col-md-3">
+            <div class="card shadow-sm mb-4 space-element">
+                <div class="card-header bg-transparent">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person-circle me-2"></i>Profile Menu
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a href="{% url 'profile' %}" class="list-group-item list-group-item-action active d-flex align-items-center">
+                            <i class="bi bi-person me-2"></i> Profile Information
+                        </a>
+                        <a href="{% url 'security' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                            <i class="bi bi-shield-lock me-2"></i> Security
+                        </a>
+                        <a href="{% url 'dashboard' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                            <i class="bi bi-arrow-left me-2"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <!-- Profile Information Card -->
+            <div class="card shadow-sm mb-4 space-element">
+                <div class="card-header bg-transparent">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person-badge me-2"></i>Profile Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <h6 class="text-muted mb-2">Username</h6>
+                            <p class="mb-0">{{ user.username }}</p>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <h6 class="text-muted mb-2">Email</h6>
+                            <p class="mb-0">{{ user.email }}</p>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <h6 class="text-muted mb-2">Role</h6>
+                            <p class="mb-0">{{ user.role|title }}</p>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <h6 class="text-muted mb-2">Member Since</h6>
+                            <p class="mb-0">{{ user.date_joined|date:"F j, Y" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <h6 class="text-muted mb-2">Tokens Balance</h6>
+                            <p class="mb-0">{{ user.tokens_amount }} Tokens</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Token Information Card -->
+            <div class="card shadow-sm space-element mb-5">
+                <div class="card-header bg-transparent">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-key me-2"></i>Token
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        This token can be used for API authentication and other secure operations.
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="{{ user.token }}" readonly>
+                        <button class="btn btn-outline-secondary copy-token" type="button">
+                            <i class="bi bi-clipboard"></i> Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.list-group-item {
+    border: none;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.list-group-item:hover {
+    background: rgba(108, 99, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.list-group-item i {
+    font-size: 1.1rem;
+}
+
+.card-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.space-element {
+    position: relative;
+    overflow: hidden;
+}
+
+.space-element::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(108, 99, 255, 0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.bi {
+    transition: transform 0.3s ease;
+}
+
+.bi:hover {
+    transform: scale(1.2);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Copy token functionality
+    const copyButton = document.querySelector('.copy-token');
+    const tokenInput = document.querySelector('input[readonly]');
+    
+    copyButton.addEventListener('click', function() {
+        tokenInput.select();
+        document.execCommand('copy');
+        
+        // Show feedback
+        const originalText = copyButton.innerHTML;
+        copyButton.innerHTML = '<i class="bi bi-check"></i> Copied!';
+        setTimeout(() => {
+            copyButton.innerHTML = originalText;
+        }, 2000);
+    });
+});
+</script>
+{% endblock %} 

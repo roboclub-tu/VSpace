@@ -11,11 +11,9 @@ class CustomUserCreationForm(UserCreationForm):
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Add Bootstrap classes
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         # Remove password validation messages
         self.fields['password1'].help_text = ''
         self.fields['password2'].help_text = ''
