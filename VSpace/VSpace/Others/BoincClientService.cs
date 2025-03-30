@@ -129,6 +129,8 @@ namespace VSpace.Others
             var projects = new List<BoincProject>();
             var lines = output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             bool isUserSection = false;
+            bool isProjectEntry = false;
+            bool isGuiUrlSection = false;
             BoincProject currentProject = null;
 
             foreach (var line in lines)
@@ -146,6 +148,8 @@ namespace VSpace.Others
                 {
                     if (line.Contains(") -----------"))
                     {
+                        isProjectEntry = true;
+                        isGuiUrlSection = false;
                         if (currentProject != null)
                         {
                             projects.Add(currentProject);
@@ -157,23 +161,35 @@ namespace VSpace.Others
                             Progress = "0%"
                         };
                     }
-                    else if (currentProject != null)
+                    else if (isProjectEntry && currentProject != null)
                     {
-                        if (line.Contains("name:"))
+                        if (line.Contains("GUI URL:"))
                         {
-                            currentProject.Name = line.Replace("name:", "").Trim();
+                            isGuiUrlSection = true;
                         }
-                        else if (line.Contains("master URL:"))
+                        else if (!isGuiUrlSection)
                         {
-                            currentProject.ProjectUrl = line.Replace("master URL:", "").Trim();
-                        }
-                        else if (line.Contains("suspended via GUI:"))
-                        {
-                            currentProject.IsRunning = !line.Contains("yes");
-                            currentProject.Status = currentProject.IsRunning ? "Running" : "Stopped";
+                            if (line.Contains("name:"))
+                            {
+                                var name = line.Replace("name:", "").Trim();
+                                if (!name.StartsWith("team_") && !name.Contains("Your account") && !name.Contains("Message boards") && !name.Contains("Your tasks") && !name.Contains("Donate to") && ! name.Contains("user"))
+                                {
+                                    currentProject.Name = name;
+                                }
+                            }
+                            else if (line.Contains("master URL:"))
+                            {
+                                currentProject.ProjectUrl = line.Replace("master URL:", "").Trim();
+                            }
+                            else if (line.Contains("suspended via GUI:"))
+                            {
+                                currentProject.IsRunning = !line.Contains("yes");
+                                currentProject.Status = currentProject.IsRunning ? "Running" : "Stopped";
+                            }
                         }
                     }
                 }
+
             }
 
             if (currentProject != null)
