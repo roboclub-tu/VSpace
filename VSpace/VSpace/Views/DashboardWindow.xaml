@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="VSpace Dashboard" Height="600" Width="1000"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <local:BoolToColorConverter x:Key="BoolToColorConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -45,6 +49,10 @@
 
         <!-- Main Content -->
         <Grid Grid.Row="1" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -107,6 +115,7 @@
             <Grid Grid.Row="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -115,20 +124,104 @@
                            FontWeight="Bold"
                            Margin="0,0,0,10"/>
 
+                <StackPanel Grid.Row="1" 
+                          Orientation="Horizontal" 
+                          Margin="0,0,0,10">
+                    <Button x:Name="StartProjectButton"
+                            Content="Start Project"
+                            Width="120"
+                            Height="30"
+                            Margin="0,0,10,0"
+                            Click="StartProjectButton_Click"
+                            IsEnabled="False"/>
+                    
+                    <Button x:Name="StopProjectButton"
+                            Content="Stop Project"
+                            Width="120"
+                            Height="30"
+                            Click="StopProjectButton_Click"
+                            IsEnabled="False"/>
+                </StackPanel>
+
                 <ListView x:Name="ProjectsListView"
-                          Grid.Row="1"
+                          Grid.Row="2"
                           BorderThickness="1"
-                          BorderBrush="#FFCCCCCC">
+                          BorderBrush="#FFCCCCCC"
+                          SelectionChanged="ProjectsListView_SelectionChanged" Margin="0,0,-198,0">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Project Name" Width="200" DisplayMemberBinding="{Binding Name}"/>
-                            <GridViewColumn Header="Status" Width="100" DisplayMemberBinding="{Binding Status}"/>
+                            <GridViewColumn Header="Project Name" Width="150" DisplayMemberBinding="{Binding Name}"/>
+                            <GridViewColumn Header="URL" Width="250" DisplayMemberBinding="{Binding ProjectUrl}"/>
+                            <GridViewColumn Header="Status" Width="100">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Status}" 
+                                                 Foreground="{Binding IsRunning, Converter={StaticResource BoolToColorConverter}}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn Header="Tasks" Width="100" DisplayMemberBinding="{Binding Tasks}"/>
-                            <GridViewColumn Header="Progress" Width="200" DisplayMemberBinding="{Binding Progress}"/>
+                            <GridViewColumn Header="Progress" Width="100" DisplayMemberBinding="{Binding Progress}"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
             </Grid>
+
+            <!-- Token Balance and File Upload Boxes -->
+            <StackPanel Grid.Column="1" 
+                        Grid.Row="0" 
+                        Grid.RowSpan="3"
+                        Orientation="Horizontal"
+                        Margin="20,0,0,0"
+                        VerticalAlignment="Top">
+                <!-- Token Balance Box -->
+                <Border Background="#FFF5F5F5"
+                        BorderBrush="#FFCCCCCC"
+                        BorderThickness="1"
+                        CornerRadius="5"
+                        Padding="15"
+                        Margin="0,0,10,0">
+                    <StackPanel Width="150">
+                        <TextBlock Text="Your Tokens Balance"
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="TokenBalanceText"
+                                   Text="0"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="#FF007ACC"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- File Upload Box -->
+                <Border Background="#FFF5F5F5"
+                        BorderBrush="#FFCCCCCC"
+                        BorderThickness="1"
+                        CornerRadius="5"
+                        Padding="15">
+                    <StackPanel Width="150">
+                        <TextBlock Text="Upload your file"
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,10"
+                                   HorizontalAlignment="Center"/>
+                        <Button x:Name="BrowseButton"
+                                Content="Browse"
+                                Width="100"
+                                Height="30"
+                                Margin="0,0,0,10"
+                                Click="BrowseButton_Click"/>
+                        <TextBlock x:Name="SelectedFileText"
+                                   Text="No file selected"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window> 

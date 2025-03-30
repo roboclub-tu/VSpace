@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace VSpace.Others
 {
@@ -129,6 +130,8 @@ namespace VSpace.Others
             var lines = output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             bool isUserSection = false;
             bool isProjectEntry = false;
+            bool isGuiUrlSection = false;
+            BoincProject currentProject = null;
 
             foreach (var line in lines)
             {
@@ -146,23 +149,123 @@ namespace VSpace.Others
                     if (line.Contains(") -----------"))
                     {
                         isProjectEntry = true;
-                    }
-                    else if (isProjectEntry && line.Contains("name:"))
-                    {
-                        var project = new BoincProject
+                        isGuiUrlSection = false;
+                        if (currentProject != null)
                         {
-                            Name = line.Replace("name:", "").Trim(),
+                            projects.Add(currentProject);
+                        }
+                        currentProject = new BoincProject
+                        {
                             Status = "Active",
                             Tasks = "0",
                             Progress = "0%"
                         };
-                        projects.Add(project);
-                        isProjectEntry = false;
+                    }
+                    else if (isProjectEntry && currentProject != null)
+                    {
+                        if (line.Contains("GUI URL:"))
+                        {
+                            isGuiUrlSection = true;
+                        }
+                        else if (!isGuiUrlSection)
+                        {
+                            if (line.Contains("name:"))
+                            {
+                                var name = line.Replace("name:", "").Trim();
+                                if (!name.StartsWith("team_") && !name.Contains("Your account") && !name.Contains("Message boards") && !name.Contains("Your tasks") && !name.Contains("Donate to") && ! name.Contains("user"))
+                                {
+                                    currentProject.Name = name;
+                                }
+                            }
+                            else if (line.Contains("master URL:"))
+                            {
+                                currentProject.ProjectUrl = line.Replace("master URL:", "").Trim();
+                            }
+                            else if (line.Contains("suspended via GUI:"))
+                            {
+                                currentProject.IsRunning = !line.Contains("yes");
+                                currentProject.Status = currentProject.IsRunning ? "Running" : "Stopped";
+                            }
+                            else if (line.Contains("tasks:"))
+                            {
+                                currentProject.Tasks = line.Replace("tasks:", "").Trim();
+                            }
+                            else if (line.Contains("progress:"))
+                            {
+                                currentProject.Progress = line.Replace("progress:", "").Trim();
+                            }
+                        }
                     }
                 }
+
+            }
+
+            if (currentProject != null)
+            {
+                projects.Add(currentProject);
             }
 
             return projects;
+        }
+
+        public async Task<bool> StartProjectAsync(string projectUrl)
+        {
+            if (!_isConnected)
+                return false;
+
+            try
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = BOINC_CLIENT_PATH,
+                        Arguments = $"--project {projectUrl} resume",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true
+                    }
+                };
+
+                process.Start();
+                string output = await process.StandardOutput.ReadToEndAsync();
+                await process.WaitForExitAsync();
+                return process.ExitCode == 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> StopProjectAsync(string projectUrl)
+        {
+            if (!_isConnected)
+                return false;
+
+            try
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = BOINC_CLIENT_PATH,
+                        Arguments = $"--project {projectUrl} suspend",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true
+                    }
+                };
+
+                process.Start();
+                string output = await process.StandardOutput.ReadToEndAsync();
+                await process.WaitForExitAsync();
+                return process.ExitCode == 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 
@@ -172,5 +275,7 @@ namespace VSpace.Others
         public string Status { get; set; }
         public string Tasks { get; set; }
         public string Progress { get; set; }
+        public string ProjectUrl { get; set; }
+        public bool IsRunning { get; set; }
     }
 } 
