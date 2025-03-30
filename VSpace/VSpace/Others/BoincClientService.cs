@@ -128,7 +128,7 @@ namespace VSpace.Others
             var projects = new List<BoincProject>();
             var lines = output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             bool isUserSection = false;
-            BoincProject currentProject = null;
+            bool isProjectEntry = false;
 
             foreach (var line in lines)
             {
@@ -145,27 +145,21 @@ namespace VSpace.Others
                 {
                     if (line.Contains(") -----------"))
                     {
-                        if (currentProject != null)
+                        isProjectEntry = true;
+                    }
+                    else if (isProjectEntry && line.Contains("name:"))
+                    {
+                        var project = new BoincProject
                         {
-                            projects.Add(currentProject);
-                        }
-                        currentProject = new BoincProject
-                        {
+                            Name = line.Replace("name:", "").Trim(),
                             Status = "Active",
                             Tasks = "0",
                             Progress = "0%"
                         };
-                    }
-                    else if (currentProject != null && line.Contains("name:"))
-                    {
-                        currentProject.Name = line.Replace("name:", "").Trim();
+                        projects.Add(project);
+                        isProjectEntry = false;
                     }
                 }
-            }
-
-            if (currentProject != null)
-            {
-                projects.Add(currentProject);
             }
 
             return projects;
